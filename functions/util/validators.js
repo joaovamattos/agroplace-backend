@@ -12,14 +12,14 @@ exports.validateSignupData = (data) => {
     let errors = {};
     
     if(isEmpty(data.email)){
-        errors.email = 'O campo não pode estar vazio!';
+        errors.email = 'O e-mail não pode estar em branco!';
     } else if (!isEmail(data.email)){
         errors.email = 'O endereço de e-mail informado não é válido!';
     }
 
-    if(isEmpty(data.password))  errors.password = 'O campo não pode estar vazio!';
+    if(isEmpty(data.password))  errors.password = 'A senha não pode estar em branco!';
     if (data.password !== data.confirmPassword) errors.confirmPassword = 'As senhas não coincidem!';
-    if(isEmpty(data.handle))  errors.handle = 'O campo não pode estar vazio!';
+    if(isEmpty(data.name))  errors.name = 'O nome não pode estar vazio!';
 
     return {
         errors, 
@@ -30,8 +30,8 @@ exports.validateSignupData = (data) => {
 
 exports.validateLoginData = (data) => {
     let errors = {}
-    if(isEmpty(data.email)) errors.email = 'O campo não pode estar vazio!';
-    if(isEmpty(data.password)) errors.password = 'O campo não pode estar vazio!';
+    if(isEmpty(data.email)) errors.email = 'O e-mail não pode estar em branco!';
+    if(isEmpty(data.password)) errors.password = 'A senha não pode estar em branco!';
 
     return {
         errors, 
@@ -40,16 +40,7 @@ exports.validateLoginData = (data) => {
 }
 
 exports.reduceUserDetails = (data) => {
-    // let userDetails = {};
-
-    // if(!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
-    // if(!isEmpty(data.website.trim())){
-    //     // https://website.com
-    //     if(data.website.trim().substring(0, 4) !== 'http'){
-    //         userDetails.website = `http://${data.website.trim()}`;
-    //     } else userDetails.website = data.website;
-    // }
-    // if(!isEmpty(data.location.trim())) userDetails.location = data.location;
-
-    // return userDetails;
+    let userDetails = {};
+    if(!isEmpty(data.telefone.trim())) userDetails.telefone = data.telefone;
+    return userDetails;
 }
