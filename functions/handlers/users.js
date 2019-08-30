@@ -81,3 +81,19 @@ exports.login = (req, res) => {
             })
         });
 }
+
+// Add user detail
+exports.addUserDetails = (req, res) => {
+    
+    let userDetails = reduceUserDetails(req.body);
+
+    const emailBase64 = new Buffer(req.user.email).toString('base64');
+    db.doc(`/usuarios/${emailBase64}`).update(userDetails)
+    .then(() => {
+        return res.json({ message: 'Telefone adicionado com sucesso!'});
+    })
+    .catch(err => {
+        console.error(err);
+        return res.status(500).json({ error: err.code });
+    })
+}
