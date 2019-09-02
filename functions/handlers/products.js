@@ -117,3 +117,25 @@ exports.uploadProductImage = (req, res) => {
   });
   busboy.end(req.rawBody);
 };
+
+exports.deleteProduct = (req, res) => {
+  const document = db.doc(`/produtos/${req.params.productId}`);
+  document.get()
+  .then(doc => {
+      if(!doc.exists){
+          return res.status(404).json({ error: 'Produto não encontrado!' });
+      }
+      if(doc.data().userHandle !== req.user.handle){
+          return res.status(403).json({ error: 'Não autorizado!' })
+      } else {
+          return document.delete();
+      }
+  })
+  .then(() => {
+      res.json({ message: 'Produto deletado com sucesso!' })
+  })
+  .catch(err => {
+      console.error(err);
+      return res.status(500).json({ error: err.code })
+  })
+}
