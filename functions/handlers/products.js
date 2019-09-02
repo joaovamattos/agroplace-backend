@@ -166,3 +166,20 @@ exports.getAllProducts = (req, res) => {
       res.status(500).json({ error: err.code })
   });
 }
+
+exports.getProduct = (req, res) => {
+  let productData = {};
+  db.doc(`/produtos/${req.params.productId}`)
+  .get()
+  .then((doc) => {
+      if(!doc.exists){
+          return res.status(404).json({ error: 'Produto não encontrado!' })
+      }
+      productData = doc.data();
+      productData.productId = doc.id;
+      return res.status(200).json(productData);
+  })
+  .catch(err => {
+      return res.status(500).json({ error: err.code });
+  })
+}

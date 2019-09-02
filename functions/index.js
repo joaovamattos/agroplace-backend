@@ -4,7 +4,7 @@ const FBAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 // const { signup, login, uploadImage, addUserDetails, getAuthenticadUser, getUserDetails, markNotificationsRead } = require('./handlers/users');
 const { signup, login, uploadImage, addUserDetails, getUserDetails } = require('./handlers/users');
-const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts } = require('./handlers/products');
+const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 
 
 // Users routes
@@ -22,11 +22,9 @@ app.post('/product', FBAuth, postOneProduct);
 app.post('/product/image', FBAuth, uploadProductImage);
 app.put('/product/:productId', FBAuth, updateProduct);
 app.get('/products', getAllProducts);
-// app.get('/scream/:screamId', getScream);
+app.get('/product/:productId', getProduct);
 // app.post('/scream/:screamId/comment', FBAuth, commentOnScream);
 app.delete('/product/:productId', FBAuth, deleteProduct);
-
-
 // app.get('/scream/:screamId/like', FBAuth, likeScream);
 // app.get('/scream/:screamId/unlike', FBAuth, unlikeScream);
 
