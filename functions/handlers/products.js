@@ -46,7 +46,7 @@ exports.updateProduct = (req, res) => {
       descricao: req.body.description,
       idVendedor: req.user.id,
       nome: req.body.name,
-      price: req.body.price,
+      valor: req.body.price,
       urlImagem: req.body.imageUrl,
       urlFotoVendedor: req.user.imageUrl,
       vendedor: req.user.name,
@@ -138,4 +138,31 @@ exports.deleteProduct = (req, res) => {
       console.error(err);
       return res.status(500).json({ error: err.code })
   })
+}
+
+exports.getAllProducts = (req, res) => {
+  db.collection('produtos')
+  .orderBy('dataPublicacao', 'desc')
+  .get()
+  .then(data => {
+      let products = [];
+      data.forEach(doc =>{
+          products.push({
+              categoria: doc.data().categoria,
+              dataPublicacao: doc.data().dataPublicacao,
+              descricao: doc.data().descricao,
+              idVendedor: doc.data().idVendedor,
+              nome: doc.data().nome,
+              valor: doc.data().valor,
+              urlImagem: doc.data().urlImagem,
+              urlFotoVendedor: doc.data().urlFotoVendedor,
+              vendedor: doc.data().vendedor
+          });
+      });
+      return res.json(products);
+  })
+  .catch(err => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+  });
 }
