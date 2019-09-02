@@ -20,8 +20,9 @@ module.exports = (req, res, next) => {
         .get();
     })
     .then(data => {
-        req.user.id = new Buffer(data.docs[0].data().email).toString('base64');; //Get Base64 email
-        req.user.imageUrl = data.docs[0].data().imageUrl; //Get userImage
+        req.user.id = new Buffer(data.docs[0].data().email).toString('base64'); //Get Base64 email  
+        req.user.name = data.docs[0].data().nome; //Get Base64 email
+        req.user.imageUrl = data.docs[0].data().urlImagem; //Get userImage
         return next();
     })
     .catch(err => {
