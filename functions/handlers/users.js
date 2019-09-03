@@ -118,21 +118,23 @@ exports.getUserDetails = (req, res) => {
 
 
 // Get own user details
-// exports.getAuthenticadUser = (req, res) => {
-//     let userData = {};    
-//     const emailBase64 = new Buffer(req.user.email).toString('base64');
-//     db.doc(`/usuarios/${emailBase64}`).get()
-//     .then(doc => {
-//         if(doc.exists){
-//             userData.credentials = doc.data();
-//             return db.collection('likes').where('userHandle', '==', req.user.handle).get()
-//         }
-//     })
-//     .catch(err => {
-//         console.error(err);
-//         return res.status(500).json({ error: err.code })
-//     })
-// }
+exports.getAuthenticatedUser = (req, res) => {
+    let userData = {};    
+    const emailBase64 = new Buffer(req.user.email).toString('base64');
+    db.doc(`/usuarios/${emailBase64}`).get()
+    .then((doc) => {
+        if(!doc.exists){
+            return res.status(404).json({ error: 'Usuário não encontrado!' })
+        }
+        userData = doc.data();
+        userData.productId = doc.id;
+        return res.status(200).json(userData);
+    })
+    .catch(err => {
+        console.error(err);
+        return res.status(500).json({ error: err.code })
+    })
+}
 
 // Upload a profile pic
 exports.uploadImage = (req, res) => {
