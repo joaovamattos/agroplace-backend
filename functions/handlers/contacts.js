@@ -11,7 +11,7 @@ exports.addContact = (req, res) => {
             email: contact.data().email,
             nome: contact.data().nome,
             telefone: contact.data().telefone,
-            caminhoFoto: contact.data().urlImage
+            urlImagem: contact.data().urlImagem
         }
         return newContact;
     }).then(newContact => {
@@ -20,14 +20,13 @@ exports.addContact = (req, res) => {
         .collection('pessoas')
         .doc(req.params.contactId)
         .set(newContact)
-        .then(doc => {
-            const resContact = newContact;
-            resContact.id = doc.id;
-            return resContact;
+        .then(() => {
+            return res.status(201).json({ message: 'Contato adicionado com sucesso!'});
         })
-    })
-    .then(resContact => {
-        return res.status(201).json({resContact});
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({error: 'Erro ao adicionar contato, por favor tente novamente!'});
+        })
     })
     .catch(err => {
         console.error(err);
