@@ -26,10 +26,16 @@ exports.sendMessage = (req, res) => {
         resMessage.id = doc.id;
         resMessage.recipient = recipient;
         resMessage.sender = sender;
-        return res.status(201).json({resMessage});
+        return resMessage;
     })
-    .then(() => {
-        
+    .then((resMessage) => {
+        message = resMessage;
+        message.vizualizada = true;
+        db.collection('mensagens')
+        .doc(resMessage.recipient)
+        .collection(resMessage.sender)
+        .add(message)
+        return res.status(201).json({resMessage});
     })
     .catch(err => {
         console.error(err);
