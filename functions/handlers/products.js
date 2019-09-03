@@ -26,11 +26,11 @@ exports.postOneProduct = (req, res) => {
     .then(doc => {
         const resProduct = newProduct;
         resProduct.id = doc.id;
-        res.json( {resProduct} );
+        return res.json( {resProduct} );
     })
     .catch(err => {
-        res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
         console.error(err);
+        return res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
     })
 }
 

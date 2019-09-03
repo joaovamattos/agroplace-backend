@@ -4,6 +4,7 @@ const FBAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
+const { sendMessage } = require('./handlers/messages');
 
 
 // Users routes
@@ -24,6 +25,9 @@ app.put('/product/:productId', FBAuth, updateProduct);
 app.get('/products', getAllProducts);
 app.get('/product/:productId', getProduct);
 app.delete('/product/:productId', FBAuth, deleteProduct);
+
+// Message routes
+app.post('/message', FBAuth, sendMessage);
 
 // https://baseurl/api/
 exports.api = functions.https.onRequest(app);
