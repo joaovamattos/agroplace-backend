@@ -42,3 +42,30 @@ exports.sendMessage = (req, res) => {
         return res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
     })
 }
+
+exports.getMessages = (req, res) => {
+    db.collection('mensagens')
+    .doc(req.user.id)
+    .collection(req.params.recipientId)
+    .orderBy('dataCriacao', 'desc')
+    .get()
+    .then(data => {
+        let messages = [];
+        data.forEach(doc =>{
+            messages.push({
+                dataCriacao: doc.data().dataCriacao,
+                id: doc.data().id,
+                idUsuario: doc.data().idUsuario,
+                mensagem: doc.data().mensagem,
+                recipient: doc.data().recipient,
+                sender: doc.data().sender,
+                vizualizada: doc.data().vizualizada,
+            });
+        });
+        return res.json(messages);
+    })
+    .catch(err => {
+        console.error(err)
+        res.status(500).json({ error: err.code })
+    });
+  }

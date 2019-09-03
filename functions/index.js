@@ -4,7 +4,7 @@ const FBAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
-const { sendMessage } = require('./handlers/messages');
+const { sendMessage, getMessages } = require('./handlers/messages');
 
 
 // Users routes
@@ -28,6 +28,7 @@ app.delete('/product/:productId', FBAuth, deleteProduct);
 
 // Message routes
 app.post('/message', FBAuth, sendMessage);
+app.get('/messages/:recipientId', FBAuth, getMessages);
 
 // https://baseurl/api/
 exports.api = functions.https.onRequest(app);
