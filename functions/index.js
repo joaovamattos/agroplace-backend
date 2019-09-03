@@ -5,7 +5,7 @@ const { db } = require('./util/admin');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
-const { addContact } = require('./handlers/contacts');
+const { addContact, getContacts } = require('./handlers/contacts');
 
 
 
@@ -34,6 +34,7 @@ app.get('/messages/:recipientId', FBAuth, getMessages);
 
 // Contact routes
 app.post('/contact/:contactId', FBAuth, addContact);
+app.get('/contacts', FBAuth, getContacts);
 
 // https://baseurl/api/
 exports.api = functions.https.onRequest(app);
