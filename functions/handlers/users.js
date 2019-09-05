@@ -90,7 +90,7 @@ exports.addUserDetails = (req, res) => {
     const emailBase64 = new Buffer(req.user.email).toString('base64');
     db.doc(`/usuarios/${emailBase64}`).update(userDetails)
     .then(() => {
-        return res.json({ message: 'Telefone adicionado com sucesso!'});
+        return res.json({ message: 'Informações adicionadas com sucesso!'});
     })
     .catch(err => {
         console.error(err);
