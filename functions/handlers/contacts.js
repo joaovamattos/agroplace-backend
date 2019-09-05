@@ -1,7 +1,6 @@
 const { db } = require('../util/admin');
 
-exports.addContact = (req, res) => {    
-       
+exports.addContact = (req, res) => {         
     db.collection('usuarios')
     .doc(req.params.contactId)
     .get()
@@ -33,3 +32,24 @@ exports.addContact = (req, res) => {
         return res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
     })
 }
+
+exports.getContacts = (req, res) => {
+    db.collection('contatos')
+    .doc(req.user.id)
+    .collection('pessoas')
+    .get()
+    .then((snapshot) => {
+        const values = snapshot.docs.map(flattenDoc);
+        if(values.length === 0){
+            return res.status(404).json({ error: 'Nenhum contato encontrado!' })
+        }
+        return res.status(200).json(values);
+    })
+    .catch(err => {
+        return res.status(500).json({ error: err.code });
+    })
+  }
+  
+  function flattenDoc(doc){
+      return { id: doc.id, ...doc.data() };
+  }
