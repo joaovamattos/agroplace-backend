@@ -42,5 +42,7 @@ exports.validateLoginData = (data) => {
 exports.reduceUserDetails = (data) => {
     let userDetails = {};
     if(!isEmpty(data.telefone.trim())) userDetails.telefone = data.telefone;
+    if(!isEmpty(data.nome.trim())) userDetails.nome = data.nome;
+    if(!isEmpty(data.urlImagem.trim())) userDetails.urlImagem = data.urlImagem;
     return userDetails;
 }
