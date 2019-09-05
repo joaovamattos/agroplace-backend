@@ -40,3 +40,23 @@ app.get('/contacts', FBAuth, getContacts);
 exports.api = functions.https.onRequest(app);
 
 // Triggers
+exports.onUserImageChange = functions
+  .firestore.document(`/usuarios/{id}`)
+  .onUpdate((change) => {
+    console.log(change.before.data());
+    console.log(change.after.data());
+    
+    if (change.before.data().urlImagem !== change.after.data().urlImagem){
+      const batch = db.batch();
+      return db.collection('produtos').where('idVendedor', '==', change.before.data().id).get()
+        .then((data) => {
+          data.forEach(doc => {
+            const produto = db.doc(`/produtos/${doc.id}`);
+            batch.update(produto, {urlFotoVendedor: change.after.data().urlImagem });
+          })
+          return batch.commit();
+        })
+    } else {
+      return true;
+    }
+  })
