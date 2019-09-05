@@ -37,26 +37,19 @@ exports.getContacts = (req, res) => {
     db.collection('contatos')
     .doc(req.user.id)
     .collection('pessoas')
-    .on()
     .get()
-    .then((data) => {
-        if(!data.exists){
+    .then((snapshot) => {
+        const values = snapshot.docs.map(flattenDoc);
+        if(values.length === 0){
             return res.status(404).json({ error: 'Nenhum contato encontrado!' })
         }
-        let contacts = [];
-        data.forEach(doc =>{
-            contacts.push({
-                email: doc.data().email,
-                identificadorUsuario: doc.data().identificadorUsuario,
-                nome: doc.data().nome,
-                telefone: doc.data().telefone,
-                urlImagem: doc.data().urlImagem
-            });
-        });
-        return res.status(200).json(contacts);
+        return res.status(200).json(values);
     })
     .catch(err => {
         return res.status(500).json({ error: err.code });
     })
   }
   
+  function flattenDoc(doc){
+      return { id: doc.id, ...doc.data() };
+  }
