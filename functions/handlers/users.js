@@ -191,19 +191,27 @@ exports.uploadImage = (req, res) => {
     busboy.end(req.rawBody);
   };
 
-//   exports.markNotificationsRead = (req, res) => {
-//       let batch = db.batch();
-//       req.body.forEach(notificationId => {
-//           const notification = db.doc(`/notifications/${notificationId}`);
-//           batch.update(notification, { read: true });
-//       });
-//       batch
-//         .commit()
-//         .then(() => {
-//             return res.json({ message: 'Notifications mark read' });
-//         })
-//         .catch(err => {
-//             console.error(err);
-//             return res.status(500).json({ erro: err.code });
-//         })
-//   }
+exports.markMessagesRead = (req, res) => {
+    let batch = db.batch();
+    
+    db.collection('mensagens')
+    .doc(req.body.recipientId)
+    .collection(req.user.id)
+    .get()
+    .then(snapshot => {
+        snapshot.forEach((doc) => {  
+            const message = db.doc(`/mensagens/${req.body.recipientId}/${req.user.id}/${doc.id}`);
+            batch.update(message, { visualizada: true });
+        });
+
+        batch
+        .commit()
+        .then(() => {
+            return res.json({ message: 'Mensagens marcadas como lidas!' });
+        })
+    })
+    .catch(err => {
+        console.error(err);
+        return res.status(500).json({ erro: err.code });
+    })
+}
