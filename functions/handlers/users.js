@@ -176,11 +176,9 @@ exports.uploadImage = (req, res) => {
           }
         })
         .then(() => {
-          const urlImagem = `https://firebasestorage.googleapis.com/v0/b/${
-            config.storageBucket
-          }/o/usuarios/${imageFileName}?alt=media`;
-          const emailBase64 = new Buffer(req.user.email).toString('base64');
-          return db.doc(`/usuarios/${emailBase64}`).update({ urlImagem });
+            const urlImagem = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/usuarios/${imageFileName}?alt=media`;
+            const emailBase64 = new Buffer(req.user.email).toString('base64');  
+            return db.doc(`/usuarios/${emailBase64}`).update({ urlImagem });
         })
         .then(() => {
           return res.json({ message: 'Upload realizado com sucesso' });

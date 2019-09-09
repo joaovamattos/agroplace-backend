@@ -7,8 +7,6 @@ const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAll
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
 
-
-
 // Users routes
 app.post('/signup', signup);
 app.post('/login', login);
@@ -17,7 +15,6 @@ app.post('/user', FBAuth, addUserDetails);
 app.put('/user', FBAuth, addUserDetails);
 app.get('/user/:userId', getUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-// app.get('/user/logout', FBAuth, logout);
 // app.post('/messages', FBAuth, markMessagesRead);
 
 // Product routes
@@ -53,10 +50,18 @@ exports.onUserImageChange = functions
           data.forEach(doc => {
             const produto = db.doc(`/produtos/${doc.id}`);
             batch.update(produto, {urlFotoVendedor: change.after.data().urlImagem });
-          })
+          });
+          return db.collection('contatos').get();
+        })
+        .then((contacts) => {
+          contacts.forEach((doc) => {  
+            if(doc.id !== change.before.data().id)   
+              batch.update(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem });            
+          })          
           return batch.commit();
         })
     } else {
       return true;
     }
   })
+ 

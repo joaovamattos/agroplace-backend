@@ -12,8 +12,14 @@ exports.addContact = (req, res) => {
             telefone: contact.data().telefone,
             urlImagem: contact.data().urlImagem
         }
+
+        db.collection('contatos')
+        .doc(req.user.id)
+        .set({ id: newContact.identificadorUsuario })
+        
         return newContact;
-    }).then(newContact => {
+    })
+    .then(newContact => {
         db.collection('contatos')
         .doc(req.user.id)
         .collection('pessoas')
@@ -50,6 +56,6 @@ exports.getContacts = (req, res) => {
     })
   }
   
-  function flattenDoc(doc){
-      return { id: doc.id, ...doc.data() };
-  }
+function flattenDoc(doc){
+    return { id: doc.id, ...doc.data() };
+}
