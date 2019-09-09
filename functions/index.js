@@ -58,6 +58,13 @@ exports.onUserImageChange = functions
             if(doc.id !== change.before.data().id)   
               batch.update(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem });            
           })          
+          return db.collection('conversas').get();
+        })
+        .then((conversations) => {
+          conversations.forEach((doc) => {  
+            if(doc.id !== change.before.data().id)   
+              batch.update(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem });            
+          })          
           return batch.commit();
         })
     } else {
