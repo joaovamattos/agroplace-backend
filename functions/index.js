@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const app = require('express')();
 const FBAuth = require('./util/fbAuth');
 const { db } = require('./util/admin');
-const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser } = require('./handlers/users');
+const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser, markMessagesRead } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
@@ -15,7 +15,7 @@ app.post('/user', FBAuth, addUserDetails);
 app.put('/user', FBAuth, addUserDetails);
 app.get('/user/:userId', getUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-// app.post('/messages', FBAuth, markMessagesRead);
+app.put('/messages', FBAuth, markMessagesRead);
 
 // Product routes
 app.post('/product', FBAuth, postOneProduct);
