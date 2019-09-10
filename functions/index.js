@@ -6,6 +6,7 @@ const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthentic
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
+const { getConversations } = require('./handlers/conversations');
 
 // Users routes
 app.post('/signup', signup);
@@ -32,6 +33,9 @@ app.get('/messages/:recipientId', FBAuth, getMessages);
 // Contact routes
 app.post('/contact/:contactId', FBAuth, addContact);
 app.get('/contacts', FBAuth, getContacts);
+
+// Conversation routes
+app.get('/conversations', FBAuth, getConversations);
 
 // https://baseurl/api/
 exports.api = functions.https.onRequest(app);
@@ -71,4 +75,3 @@ exports.onUserImageChange = functions
       return true;
     }
   })
- 
