@@ -28,6 +28,34 @@ exports.sendMessage = (req, res) => {
         resMessage.sender = sender;
         return resMessage;
     })
+    // .then((resMessage) => {
+    //     db.collection('conversas')
+    //     .doc(resMessage.sender)
+    //     .collection('contatos')
+    //     .doc(resMessage.recipient)
+    //     .set({
+    //         idUsuario: resMessage.recipient,
+    //         mensagem: resMessage.mensagem,
+    //         nome: req.body.recipientName,
+    //         urlImagem: req.body.recipientImageUrl,
+    //         vizualizada: true
+    //     })
+    //     return resMessage;
+    // })
+    // .then((resMessage) => {
+    //     db.collection('conversas')
+    //     .doc(resMessage.recipient)
+    //     .collection('contatos')
+    //     .doc(resMessage.sender)
+    //     .set({
+    //         idUsuario: resMessage.sender,
+    //         mensagem: resMessage.mensagem,
+    //         nome: req.user.nome,
+    //         urlImagem: req.user.urlImagem,
+    //         vizualizada: true
+    //     })
+    //     return resMessage;
+    // })
     .then((resMessage) => {
         message = resMessage;
         message.vizualizada = true;
