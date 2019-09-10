@@ -1,7 +1,8 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 const FBAuth = require('./util/fbAuth');
-const { db } = require('./util/admin');
+const { admin, db } = require('./util/admin');
+const firebase = require('firebase');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser, markMessagesRead } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
@@ -75,3 +76,26 @@ exports.onUserImageChange = functions
       return true;
     }
   })
+
+exports.deleteImageOnDeleteProduct = functions
+  .firestore.document('produtos/{id}')
+  .onDelete((snap) => {
+    // const produto = db.collection('produtos').doc(snap.id).get();
+    const produto = db.collection('produtos').doc(snap.id).get();
+    // https://firebasestorage.googleapis.com/v0/b/agroplace-project.appspot.com/o/872265711293.jpeg?alt=media&token=11b1d10c-f74e-4d38-a7c8-fc3d913241a4
+    const imageUrl = produto.urlImagem;
+    let spltUrl = imageUrl.split('o/');
+    let spltUrl2 = spltUrl[1].split('?alt');
+
+    const storage = firebase.storage();
+    const storageRef = storage.ref();
+    const imageRef = storageRef.child(spltUrl2[0]);
+
+    imageRef.delete()
+    .then(() => {
+      console.log('Imagem excluida com sucesso!');
+    })
+    .catch((err) => {
+      console.error(err);      
+    })
+  });
