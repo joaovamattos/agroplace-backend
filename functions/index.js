@@ -77,7 +77,7 @@ exports.onUserImageChange = functions
     }
   })
 
-  exports.deleteImageOnDeleteProduct = functions
+exports.deleteImageOnDeleteProduct = functions
   .firestore.document('produtos/{produtoID}')
   .onDelete((snap) => {
     
@@ -98,4 +98,31 @@ exports.onUserImageChange = functions
     .catch((err) => {
       console.error(err);      
     })
+  });
+
+exports.deleteImageOnChangeProductImage = functions
+  .firestore.document('produtos/{produtoID}')
+  .onUpdate((change) => {
+   
+    console.log(change.before.data());
+    console.log(change.after.data());
+    
+    if (change.before.data().urlImagem !== change.after.data().urlImagem){
+
+      const imageUrl = change.before.data().urlImagem;
+      let spltUrl = imageUrl.split('o/');
+      let imageName = spltUrl[1].split('?alt')[0];
+
+      const storage = admin.storage();
+      const bucket = storage.bucket();
+      const file = bucket.file(imageName);
+
+    file.delete()
+    .then(() => {
+      console.log('Imagem excluida com sucesso!');
+    })
+    .catch((err) => {
+      console.error(err);      
+    })
+  }
   });
