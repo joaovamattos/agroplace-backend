@@ -123,6 +123,38 @@ exports.deleteImageOnChangeProductImage = functions
     })
     .catch((err) => {
       console.error(err);      
-    })
-  }
+    })}
+    else {
+      return true;
+    }
+  });
+
+  exports.deleteImageOnChangeUserImage = functions
+  .firestore.document('usuarios/{id}')
+  .onUpdate((change) => {   
+    console.log(change.before.data());
+    console.log(change.after.data());
+    if (change.before.data().urlImagem !== 'no-img.png'){
+
+      if (change.before.data().urlImagem !== change.after.data().urlImagem){
+  
+        const imageUrl = change.before.data().urlImagem;
+        let spltUrl = imageUrl.split('o/');
+        let imageName = spltUrl[1].split('?alt')[0];
+  
+        const storage = admin.storage();
+        const bucket = storage.bucket();
+        const file = bucket.file(imageName);
+  
+      file.delete()
+      .then(() => {
+        console.log('Imagem excluida com sucesso!');
+      })
+      .catch((err) => {
+        console.error(err);      
+      })}
+    }
+    else {
+      return true;
+    }
   });
