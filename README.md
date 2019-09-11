@@ -25,6 +25,7 @@ module.exports = {
 
 No diretório do seu projeto, inicie o projeto no firebase e faça o deploy
 > firebase init
+
 > firebase deploy
 
 ## Dependências do projeto
