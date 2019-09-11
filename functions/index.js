@@ -1,7 +1,8 @@
 const functions = require('firebase-functions');
 const app = require('express')();
 const FBAuth = require('./util/fbAuth');
-const { db } = require('./util/admin');
+const { admin, db } = require('./util/admin');
+const firebase = require('firebase');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser, markMessagesRead } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
@@ -75,3 +76,26 @@ exports.onUserImageChange = functions
       return true;
     }
   })
+
+  exports.deleteImageOnDeleteProduct = functions
+  .firestore.document('produtos/{produtoID}')
+  .onDelete((snap) => {
+    
+    const produtoDeletado = snap.data();
+
+    const imageUrl = produtoDeletado.urlImagem;
+    let spltUrl = imageUrl.split('o/');
+    let imageName = spltUrl[1].split('?alt')[0];
+
+    const storage = admin.storage();
+    const bucket = storage.bucket();
+    const file = bucket.file(imageName);
+
+    file.delete()
+    .then(() => {
+      console.log('Imagem excluida com sucesso!');
+    })
+    .catch((err) => {
+      console.error(err);      
+    })
+  });
