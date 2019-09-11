@@ -77,21 +77,21 @@ exports.onUserImageChange = functions
     }
   })
 
-exports.deleteImageOnDeleteProduct = functions
-  .firestore.document('produtos/{id}')
+  exports.deleteImageOnDeleteProduct = functions
+  .firestore.document('produtos/{produtoID}')
   .onDelete((snap) => {
-    // const produto = db.collection('produtos').doc(snap.id).get();
-    const produto = db.collection('produtos').doc(snap.id).get();
-    // https://firebasestorage.googleapis.com/v0/b/agroplace-project.appspot.com/o/872265711293.jpeg?alt=media&token=11b1d10c-f74e-4d38-a7c8-fc3d913241a4
-    const imageUrl = produto.urlImagem;
+    
+    const produtoDeletado = snap.data();
+
+    const imageUrl = produtoDeletado.urlImagem;
     let spltUrl = imageUrl.split('o/');
-    let spltUrl2 = spltUrl[1].split('?alt');
+    let imageName = spltUrl[1].split('?alt')[0];
 
-    const storage = firebase.storage();
-    const storageRef = storage.ref();
-    const imageRef = storageRef.child(spltUrl2[0]);
+    const storage = admin.storage();
+    const bucket = storage.bucket();
+    const file = bucket.file(imageName);
 
-    imageRef.delete()
+    file.delete()
     .then(() => {
       console.log('Imagem excluida com sucesso!');
     })
