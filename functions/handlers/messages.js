@@ -6,8 +6,6 @@ exports.sendMessage = (req, res) => {
         res.status(400).json({ body: 'A mensagem não pode estar vazia!' })
     }
     
-    // const emailBase64 = new Buffer(req.user.email).toString('base64');
-
     const newMessage = {
         idUsuario: req.user.id,
         mensagem: req.body.message,
@@ -67,7 +65,7 @@ exports.sendMessage = (req, res) => {
     })
     .catch(err => {
         console.error(err);
-        return res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
+        return res.status(500).json({error: 'Algo deu errado ao enviar a mensagem, por favor tente novamente!'});
     })
 }
 
@@ -90,10 +88,10 @@ exports.getMessages = (req, res) => {
                 vizualizada: doc.data().vizualizada,
             });
         });
-        return res.json(messages);
+        return res.status(200).json(messages);
     })
     .catch(err => {
         console.error(err)
-        res.status(500).json({ error: err.code })
+        res.status(500).json({ error: 'Erro ao obter as mensagens, por favor tente novamente!' })
     });
   }
