@@ -13,7 +13,7 @@ exports.getConversations = (req, res) => {
         return res.status(200).json(values);
     })
     .catch(err => {
-        return res.status(500).json({ error: err.code });
+        return res.status(500).json({ error: 'Erro ao obter conversas, por favor tente novamente!' });
     })
   }
   

@@ -35,7 +35,7 @@ exports.addContact = (req, res) => {
     })
     .catch(err => {
         console.error(err);
-        return res.status(500).json({error: 'Algo deu errado, por favor tente novamente!'});
+        return res.status(500).json({ error: 'Algo deu errado, por favor tente novamente!' });
     })
 }
 
@@ -52,7 +52,7 @@ exports.getContacts = (req, res) => {
         return res.status(200).json(values);
     })
     .catch(err => {
-        return res.status(500).json({ error: err.code });
+        return res.status(500).json({ error: 'Erro ao obter contatos, por favor tente novamente!' });
     })
   }
   

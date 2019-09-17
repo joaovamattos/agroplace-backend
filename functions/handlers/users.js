@@ -94,7 +94,7 @@ exports.addUserDetails = (req, res) => {
     })
     .catch(err => {
         console.error(err);
-        return res.status(500).json({ error: err.code });
+        return res.status(500).json({ error: 'Erro ao adicionar detalhes, por favor tente novamente!' });
     })
 }
 
@@ -112,7 +112,7 @@ exports.getUserDetails = (req, res) => {
     }) 
     .catch(err => {
         console.error(err);
-        return res.status(500).json({ error: err.code });
+        return res.status(500).json({ error: 'Erro ao obter detalhes, por favor tente novamente!' });
     })
 }
 
@@ -132,7 +132,7 @@ exports.getAuthenticatedUser = (req, res) => {
     })
     .catch(err => {
         console.error(err);
-        return res.status(500).json({ error: err.code })
+        return res.status(500).json({ error: 'Erro ao obter usuário logado!' })
     })
 }
 
@@ -181,7 +181,7 @@ exports.uploadImage = (req, res) => {
             return db.doc(`/usuarios/${emailBase64}`).update({ urlImagem });
         })
         .then(() => {
-          return res.json({ message: 'Upload realizado com sucesso' });
+          return res.status(201).json({ message: 'Upload realizado com sucesso' });
         })
         .catch((err) => {
           console.error(err);
@@ -207,11 +207,11 @@ exports.markMessagesRead = (req, res) => {
         batch
         .commit()
         .then(() => {
-            return res.json({ message: 'Mensagens marcadas como lidas!' });
+            return res.status(200).json({ message: 'Mensagens marcadas como lidas!' });
         })
     })
     .catch(err => {
         console.error(err);
-        return res.status(500).json({ erro: err.code });
+        return res.status(500).json({ erro: 'Erro ao marcar mensagens como lidas!' });
     })
 }

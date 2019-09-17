@@ -48,3 +48,33 @@ exports.reduceUserDetails = (data) => {
         if(!isEmpty(data.urlImagem.trim())) userDetails.urlImagem = data.urlImagem;
     return userDetails;
 }
+
+exports.reduceProductDetails = (data) => {
+    let productDetails = {};
+    if(data.name)
+        if(!isEmpty(data.name.trim())) productDetails.nome = data.name;
+    if(data.categoria)
+        if(!isEmpty(data.category.trim())) productDetails.categoria = data.category;
+    if(data.description)
+        if(!isEmpty(data.description.trim())) productDetails.descricao = data.description;
+    if(data.price)
+        if(!isEmpty(data.price.trim())) productDetails.valor = data.price;
+    if(data.imageUrl)
+        if(!isEmpty(data.imageUrl.trim())) productDetails.urlImagem = data.imageUrl;
+    return productDetails;
+}
+
+exports.validateProductData = (data) => {
+    let errors = {};
+    
+    if(isEmpty(data.nome)) errors.nome = 'O nome do produto não pode estar em branco!';
+    if(isEmpty(data.categoria))  errors.categoria = 'Por favor escolha uma categoria para o produto!';
+    if(isEmpty(data.descricao))  errors.descricao = 'Por favor preencha uma descrição para seu produto!';
+    if(isEmpty(data.valor))  errors.valor = 'O valor não pode estar vazio!';
+    if(isEmpty(data.urlImagem))  errors.urlImagem = 'Por favor envie uma imagem para seu produto!';
+
+    return {
+        errors, 
+        valid: Object.keys(errors).length === 0 ? true : false
+    }
+}
