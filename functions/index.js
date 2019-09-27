@@ -43,39 +43,46 @@ exports.api = functions.https.onRequest(app);
 
 // Triggers
 exports.onUserImageChange = functions
-  .firestore.document(`/usuarios/{id}`)
-  .onUpdate((change) => {
-    console.log(change.before.data());
-    console.log(change.after.data());
-    
-    if (change.before.data().urlImagem !== change.after.data().urlImagem){
-      const batch = db.batch();
-      return db.collection('produtos').where('idVendedor', '==', change.before.data().id).get()
-        .then((data) => {
-          data.forEach(doc => {
-            const produto = db.doc(`/produtos/${doc.id}`);
-            batch.update(produto, {urlFotoVendedor: change.after.data().urlImagem });
-          });
-          return db.collection('contatos').get();
+.firestore.document(`/usuarios/{userId}`)
+.onUpdate((change) => {
+  console.log(change.before.data());
+  console.log(change.after.data());
+  
+  if (change.before.data().urlImagem !== change.after.data().urlImagem){
+    console.log('Foto mudou');      
+    const batch = db.batch();
+    return db.collection('produtos').where('idVendedor', '==', change.before.data().id).get()
+      .then((data) => {
+        data.forEach(doc => {
+          const produto = db.doc(`/produtos/${doc.id}`);
+          batch.update(produto, {urlFotoVendedor: change.after.data().urlImagem });
         })
-        .then((contacts) => {
-          contacts.forEach((doc) => {  
-            if(doc.id !== change.before.data().id)   
-              batch.update(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem });            
-          })          
-          return db.collection('conversas').get();
-        })
-        .then((conversations) => {
-          conversations.forEach((doc) => {  
-            if(doc.id !== change.before.data().id)   
-              batch.update(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem });            
-          })          
-          return batch.commit();
-        })
-    } else {
-      return true;
-    }
-  })
+        return db.collection('contatos').get()
+      })
+      .then((contacts) => {
+        contacts.forEach((doc) => {  
+          if (doc.id !== change.before.data().id){
+            if (db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`)){
+              batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });
+            }
+          }
+        })       
+        return db.collection('conversas').get()
+      })
+      .then((conversations) => {
+        conversations.forEach((doc) => {  
+          if(doc.id !== change.before.data().id){
+            if(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`)) {   
+              batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });            
+            }
+          }
+        })  
+        return batch.commit();
+      })
+  } else {
+    return true;
+  }
+})
 
 exports.deleteImageOnDeleteProduct = functions
   .firestore.document('produtos/{produtoID}')
@@ -134,7 +141,8 @@ exports.deleteImageOnChangeProductImage = functions
   .onUpdate((change) => {   
     console.log(change.before.data());
     console.log(change.after.data());
-    if (change.before.data().urlImagem !== 'no-img.png'){
+    if (change.before.data().urlImagem !== 'https://firebasestorage.googleapis.com/v0/b/agroplace-project.appspot.com/o/no-img.png?alt=media' 
+    && change.before.data().urlImagem !== 'https://firebasestorage.googleapis.com/v0/b/agroplace-project.appspot.com/o/no-image.png?alt=media'){
 
       if (change.before.data().urlImagem !== change.after.data().urlImagem){
   
@@ -158,3 +166,45 @@ exports.deleteImageOnChangeProductImage = functions
       return true;
     }
   });
+
+  exports.onUserNameChange = functions
+  .firestore.document(`/usuarios/{userId}`)
+  .onUpdate((change) => {
+    console.log(change.before.data());
+    console.log(change.after.data());
+    
+    if (change.before.data().nome !== change.after.data().nome){
+      console.log('Nome mudou');      
+      const batch = db.batch();
+      return db.collection('produtos').where('idVendedor', '==', change.before.data().id).get()
+        .then((data) => {
+          data.forEach(doc => {
+            const produto = db.doc(`/produtos/${doc.id}`);
+            batch.update(produto, {vendedor: change.after.data().nome });
+          })
+          return db.collection('contatos').get()
+        })
+        .then((contacts) => {
+          contacts.forEach((doc) => {  
+            if (doc.id !== change.before.data().id){
+              if (db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`)){
+                batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { nome: change.after.data().nome }, { merge: true });
+              }
+            }
+          })       
+          return db.collection('conversas').get()
+        })
+        .then((conversations) => {
+          conversations.forEach((doc) => {  
+            if(doc.id !== change.before.data().id){
+              if(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`)) {   
+                batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { nome: change.after.data().nome }, { merge: true });            
+              }
+            }
+          })  
+          return batch.commit();
+        })
+    } else {
+      return true;
+    }
+  })
