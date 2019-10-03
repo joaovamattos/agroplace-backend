@@ -6,8 +6,6 @@ exports.postOneProduct = (req, res) => {
     if(req.body.name.trim() === ''){
         res.status(400).json({ body: 'O nome do produto não pode estar vazio!' })
     }
-    
-    // const emailBase64 = new Buffer(req.user.email).toString('base64');
 
     const newProduct = {
         categoria: req.body.category,
@@ -15,7 +13,7 @@ exports.postOneProduct = (req, res) => {
         descricao: req.body.description,
         idVendedor: req.user.id,
         nome: req.body.name,
-        price: req.body.price,
+        valor: req.body.price,
         urlImagem: req.body.imageUrl,
         urlFotoVendedor: req.user.imageUrl,
         vendedor: req.user.name,

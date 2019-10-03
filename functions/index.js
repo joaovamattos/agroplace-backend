@@ -62,9 +62,7 @@ exports.onUserImageChange = functions
       .then((contacts) => {
         contacts.forEach((doc) => {  
           if (doc.id !== change.before.data().id){
-            if (db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`)){
               batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });
-            }
           }
         })       
         return db.collection('conversas').get()
@@ -72,9 +70,7 @@ exports.onUserImageChange = functions
       .then((conversations) => {
         conversations.forEach((doc) => {  
           if(doc.id !== change.before.data().id){
-            if(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`)) {   
               batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });            
-            }
           }
         })  
         return batch.commit();
@@ -174,7 +170,6 @@ exports.deleteImageOnChangeProductImage = functions
     console.log(change.after.data());
     
     if (change.before.data().nome !== change.after.data().nome){
-      console.log('Nome mudou');      
       const batch = db.batch();
       return db.collection('produtos').where('idVendedor', '==', change.before.data().id).get()
         .then((data) => {
@@ -187,9 +182,7 @@ exports.deleteImageOnChangeProductImage = functions
         .then((contacts) => {
           contacts.forEach((doc) => {  
             if (doc.id !== change.before.data().id){
-              if (db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`)){
                 batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { nome: change.after.data().nome }, { merge: true });
-              }
             }
           })       
           return db.collection('conversas').get()
@@ -197,9 +190,7 @@ exports.deleteImageOnChangeProductImage = functions
         .then((conversations) => {
           conversations.forEach((doc) => {  
             if(doc.id !== change.before.data().id){
-              if(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`)) {   
                 batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { nome: change.after.data().nome }, { merge: true });            
-              }
             }
           })  
           return batch.commit();
