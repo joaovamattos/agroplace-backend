@@ -7,7 +7,9 @@ exports.postOneProduct = (req, res) => {
     if(req.body.name.trim() === ''){
         res.status(400).json({ body: 'O nome do produto não pode estar vazio!' })
     }
-
+    
+    const ref = db.collection('produtos').doc();
+    const id = ref.id;
     const newProduct = {
         categoria: req.body.category,
         dataPublicacao: new Date().toISOString(),
@@ -18,13 +20,15 @@ exports.postOneProduct = (req, res) => {
         urlImagem: req.body.imageUrl,
         urlFotoVendedor: req.user.imageUrl,
         vendedor: req.user.name,
+        idProduto: id
     };
 
     const { valid, errors } = validateProductData(newProduct);
     if (!valid) return res.status(400).json(errors);
 
     db.collection('produtos')
-    .add(newProduct)
+    .doc(id)
+    .set(newProduct)
     .then(doc => {
         const resProduct = newProduct;
         resProduct.id = doc.id;
@@ -160,8 +164,7 @@ exports.getAllProducts = (req, res) => {
               valor: doc.data().valor,
               urlImagem: doc.data().urlImagem,
               urlFotoVendedor: doc.data().urlFotoVendedor,
-              vendedor: doc.data().vendedor,
-              idProduto: doc.data().idProduto
+              vendedor: doc.data().vendedor
           });
       });
       return res.json(products);
