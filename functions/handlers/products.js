@@ -1,5 +1,6 @@
 const { db, admin } = require('../util/admin');
 const config = require('../util/config');
+const { reduceProductDetails, validateProductData } = require('../util/validators');
 
 exports.postOneProduct = (req, res) => {    
     
@@ -19,6 +20,9 @@ exports.postOneProduct = (req, res) => {
         vendedor: req.user.name,
     };
 
+    const { valid, errors } = validateProductData(newProduct);
+    if (!valid) return res.status(400).json(errors);
+
     db.collection('produtos')
     .add(newProduct)
     .then(doc => {
@@ -34,21 +38,23 @@ exports.postOneProduct = (req, res) => {
 
 exports.updateProduct = (req, res) => {    
     
-  if(req.body.name.trim() === ''){
-      res.status(400).json({ body: 'O nome do produto não pode estar vazio!' })
-  }
+  // if(req.body.name.trim() === ''){
+  //     res.status(400).json({ body: 'O nome do produto não pode estar vazio!' })
+  // }
 
-  const product = {
-      categoria: req.body.category,
-      dataPublicacao: new Date().toISOString(),
-      descricao: req.body.description,
-      idVendedor: req.user.id,
-      nome: req.body.name,
-      valor: req.body.price,
-      urlImagem: req.body.imageUrl,
-      urlFotoVendedor: req.user.imageUrl,
-      vendedor: req.user.name,
-  };
+  // const product = {
+  //     categoria: req.body.category,
+  //     dataPublicacao: new Date().toISOString(),
+  //     descricao: req.body.description,
+  //     idVendedor: req.user.id,
+  //     nome: req.body.name,
+  //     valor: req.body.price,
+  //     urlImagem: req.body.imageUrl,
+  //     urlFotoVendedor: req.user.imageUrl,
+  //     vendedor: req.user.name,
+  // };
+
+  let product = reduceProductDetails(req.body);
 
   db.collection('produtos')
   .doc(req.params.productId)
@@ -124,13 +130,13 @@ exports.deleteProduct = (req, res) => {
           return res.status(404).json({ error: 'Produto não encontrado!' });
       }
       if(doc.data().userHandle !== req.user.handle){
-          return res.status(403).json({ error: 'Não autorizado!' })
+          return res.status(403).json({ error: 'Não autorizado, por favor faça login!' })
       } else {
           return document.delete();
       }
   })
   .then(() => {
-      res.json({ message: 'Produto deletado com sucesso!' })
+      res.status(200).json({ message: 'Produto deletado com sucesso!' })
   })
   .catch(err => {
       console.error(err);
@@ -154,14 +160,15 @@ exports.getAllProducts = (req, res) => {
               valor: doc.data().valor,
               urlImagem: doc.data().urlImagem,
               urlFotoVendedor: doc.data().urlFotoVendedor,
-              vendedor: doc.data().vendedor
+              vendedor: doc.data().vendedor,
+              idProduto: doc.data().idProduto
           });
       });
       return res.json(products);
   })
   .catch(err => {
       console.error(err)
-      res.status(500).json({ error: err.code })
+      res.status(500).json({ error: 'Erro ao carregar produtos, por favor tente novamente!' })
   });
 }
 
@@ -178,6 +185,6 @@ exports.getProduct = (req, res) => {
       return res.status(200).json(productData);
   })
   .catch(err => {
-      return res.status(500).json({ error: err.code });
+      return res.status(500).json({ error: 'Erro ao obter o produto, por favor tente novamente!' });
   })
 }
