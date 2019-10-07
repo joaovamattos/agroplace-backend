@@ -164,7 +164,8 @@ exports.getAllProducts = (req, res) => {
               valor: doc.data().valor,
               urlImagem: doc.data().urlImagem,
               urlFotoVendedor: doc.data().urlFotoVendedor,
-              vendedor: doc.data().vendedor
+              vendedor: doc.data().vendedor,
+              idProduto: doc.data().idProduto,
           });
       });
       return res.json(products);
