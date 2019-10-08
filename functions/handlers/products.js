@@ -41,28 +41,12 @@ exports.postOneProduct = (req, res) => {
 }
 
 exports.updateProduct = (req, res) => {    
-    
-  // if(req.body.name.trim() === ''){
-  //     res.status(400).json({ body: 'O nome do produto não pode estar vazio!' })
-  // }
-
-  // const product = {
-  //     categoria: req.body.category,
-  //     dataPublicacao: new Date().toISOString(),
-  //     descricao: req.body.description,
-  //     idVendedor: req.user.id,
-  //     nome: req.body.name,
-  //     valor: req.body.price,
-  //     urlImagem: req.body.imageUrl,
-  //     urlFotoVendedor: req.user.imageUrl,
-  //     vendedor: req.user.name,
-  // };
 
   let product = reduceProductDetails(req.body);
 
   db.collection('produtos')
   .doc(req.params.productId)
-  .set(product)
+  .set(product, {merge: true})
   .then(doc => {
       const resProduct = product;
       resProduct.id = doc.id;
@@ -75,7 +59,7 @@ exports.updateProduct = (req, res) => {
 }
 
 exports.uploadProductImage = (req, res) => {
-  const BusBoy = require('busboy');
+   const BusBoy = require('busboy');
   const path = require('path');
   const os = require('os');
   const fs = require('fs');
@@ -113,9 +97,7 @@ exports.uploadProductImage = (req, res) => {
         }
       })
       .then(() => {
-        const urlImagem = `https://firebasestorage.googleapis.com/v0/b/${
-          config.storageBucket
-        }/o/produtos/${imageFileName}?alt=media`;
+        const urlImagem = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
         return res.status(201).json({ urlImage: urlImagem });
       })
       .catch((err) => {

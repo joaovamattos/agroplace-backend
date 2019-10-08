@@ -53,7 +53,7 @@ exports.reduceProductDetails = (data) => {
     let productDetails = {};
     if(data.name)
         if(!isEmpty(data.name.trim())) productDetails.nome = data.name;
-    if(data.categoria)
+    if(data.category)
         if(!isEmpty(data.category.trim())) productDetails.categoria = data.category;
     if(data.description)
         if(!isEmpty(data.description.trim())) productDetails.descricao = data.description;
