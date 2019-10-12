@@ -2,13 +2,13 @@ const functions = require('firebase-functions');
 const app = require('express')();
 const FBAuth = require('./util/fbAuth');
 const { admin, db } = require('./util/admin');
-const firebase = require('firebase');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser, markMessagesRead } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
 const { getConversations } = require('./handlers/conversations');
-
+const cors = require('cors');
+app.use(cors());
 // Users routes
 app.post('/signup', signup);
 app.post('/login', login);
