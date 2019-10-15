@@ -7,6 +7,8 @@ const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAll
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
 const { getConversations, markConversationsRead } = require('./handlers/conversations');
+const cors = require('cors');
+app.use(cors());
 
 // Users routes
 app.post('/signup', signup);
