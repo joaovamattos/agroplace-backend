@@ -2,12 +2,11 @@ const functions = require('firebase-functions');
 const app = require('express')();
 const FBAuth = require('./util/fbAuth');
 const { admin, db } = require('./util/admin');
-const firebase = require('firebase');
 const { signup, login, uploadImage, addUserDetails, getUserDetails, getAuthenticatedUser, markMessagesRead } = require('./handlers/users');
 const { postOneProduct, uploadProductImage, updateProduct, deleteProduct, getAllProducts, getProduct } = require('./handlers/products');
 const { sendMessage, getMessages } = require('./handlers/messages');
 const { addContact, getContacts } = require('./handlers/contacts');
-const { getConversations } = require('./handlers/conversations');
+const { getConversations, markConversationsRead } = require('./handlers/conversations');
 
 // Users routes
 app.post('/signup', signup);
@@ -17,7 +16,6 @@ app.post('/user', FBAuth, addUserDetails);
 app.put('/user', FBAuth, addUserDetails);
 app.get('/user/:userId', getUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
-app.put('/messages', FBAuth, markMessagesRead);
 
 // Product routes
 app.post('/product', FBAuth, postOneProduct);
@@ -29,6 +27,7 @@ app.delete('/product/:productId', FBAuth, deleteProduct);
 
 // Message routes
 app.post('/message', FBAuth, sendMessage);
+app.put('/messages', FBAuth, markMessagesRead);
 app.get('/messages/:recipientId', FBAuth, getMessages);
 
 // Contact routes
@@ -37,6 +36,7 @@ app.get('/contacts', FBAuth, getContacts);
 
 // Conversation routes
 app.get('/conversations', FBAuth, getConversations);
+app.put('/conversations', FBAuth, markConversationsRead);
 
 // https://baseurl/api/
 exports.api = functions.https.onRequest(app);

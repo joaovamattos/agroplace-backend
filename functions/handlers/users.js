@@ -104,11 +104,33 @@ exports.getUserDetails = (req, res) => {
     db.doc(`/usuarios/${req.params.userId}`).get()
     .then((doc) => {
         if(doc.exists) {
-            userData.user = doc.data();            
-            return res.json(userData);
-        } else {
-            return res.status(404).json({ error: 'Usuário não encontrado!' })
-        }
+            userData.user = doc.data();
+            return db
+                .collection('produtos')
+                .where('idVendedor', '==', req.params.userId)
+                .orderBy('dataPublicacao', 'desc')
+                .get();
+            } else {
+                return res.status(404).json({ error: 'Usuário não encontrado!' })
+            }
+        })
+        .then((data) => {
+            userData.products = [];
+            data.forEach(doc => {
+                userData.products.push({
+                    categoria: doc.data().categoria,
+                    dataPublicacao: doc.data().dataPublicacao,
+                    descricao: doc.data().descricao,
+                    idVendedor: doc.data().idVendedor,
+                    nome: doc.data().nome,
+                    urlFotoVendedor: doc.data().urlFotoVendedor,
+                    urlImagem: doc.data().urlImagem,
+                    valor: doc.data().valor,
+                    vendedor: doc.data().vendedor,
+                    idProduto: doc.id
+                })
+            })
+            return res.status(200).json(userData);
     }) 
     .catch(err => {
         console.error(err);

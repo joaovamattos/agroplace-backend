@@ -20,3 +20,21 @@ exports.getConversations = (req, res) => {
 function flattenDoc(doc){
     return { id: doc.id, ...doc.data() };
 }
+
+
+
+exports.markConversationsRead = (req, res) => {
+    let batch = db.batch();
+    req.body.forEach(conversationId => {
+        const conversation = db.doc(`/conversas/${req.user.id}/contatos/${conversationId}`);
+        batch.update(conversation, { visualizada: true });
+    });
+    batch
+      .commit()
+      .then(() => {
+          return res.status(200).json({ message: 'Conversas marcadas como lidas' });
+      })
+      .catch(err => {
+          return res.status(500).json({ erro: 'Erro com servidor, por favor tente novamente!' });
+      })
+}
