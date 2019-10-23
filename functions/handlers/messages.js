@@ -55,6 +55,18 @@ exports.sendMessage = (req, res) => {
         return resMessage;
     })
     .then((resMessage) => {
+        
+        db.collection('conversas')
+        .doc(resMessage.recipient)
+        .set({id: resMessage.idUsuario})
+
+        db.collection('conversas')
+        .doc(resMessage.sender)
+        .set({id: resMessage.idUsuario})
+        
+        return resMessage;
+    })
+    .then((resMessage) => {
         message = resMessage;
         message.vizualizada = true;
         db.collection('mensagens')
