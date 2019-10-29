@@ -3,7 +3,7 @@ const { db } = require('../util/admin');
 exports.sendMessage = (req, res) => {    
     
     if(req.body.message.trim() === ''){
-        res.status(400).json({ body: 'A mensagem não pode estar vazia!' })
+       return res.status(400).json({ body: 'A mensagem não pode estar vazia!' })
     }
     
     const newMessage = {
