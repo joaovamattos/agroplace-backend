@@ -9,7 +9,7 @@ exports.sendMessage = (req, res) => {
     const newMessage = {
         idUsuario: req.user.id,
         mensagem: req.body.message,
-        vizualizada: false,
+        visualizada: false,
         dataCriacao: new Date().toISOString()
     };
     const recipient = req.body.recipient;
@@ -36,7 +36,7 @@ exports.sendMessage = (req, res) => {
             mensagem: resMessage.mensagem,
             nome: req.body.recipientName,
             urlImagem: req.body.recipientImageUrl,
-            vizualizada: true
+            visualizada: true
         })
         return resMessage;
     })
@@ -50,7 +50,7 @@ exports.sendMessage = (req, res) => {
             mensagem: resMessage.mensagem,
             nome: req.user.name,
             urlImagem: req.user.imageUrl,
-            vizualizada: true
+            visualizada: true
         })
         return resMessage;
     })
@@ -68,7 +68,7 @@ exports.sendMessage = (req, res) => {
     })
     .then((resMessage) => {
         message = resMessage;
-        message.vizualizada = true;
+        message.visualizada = true;
         db.collection('mensagens')
         .doc(resMessage.recipient)
         .collection(resMessage.sender)
@@ -97,7 +97,7 @@ exports.getMessages = (req, res) => {
                 mensagem: doc.data().mensagem,
                 recipient: doc.data().recipient,
                 sender: doc.data().sender,
-                vizualizada: doc.data().vizualizada,
+                visualizada: doc.data().visualizada,
             });
         });
         return res.status(200).json(messages);
