@@ -10,7 +10,8 @@ const {
   getUserDetails,
   getAuthenticatedUser,
   markMessagesRead,
-  updatePassword
+  updatePassword,
+  sendPasswordResetEmail
 } = require("./handlers/users");
 const {
   postOneProduct,
@@ -38,6 +39,7 @@ app.put("/user", FBAuth, addUserDetails);
 app.get("/user/:userId", getUserDetails);
 app.get("/user", FBAuth, getAuthenticatedUser);
 app.put("/user/updatePassword", FBAuth, updatePassword);
+app.post("/sendPasswordResetEmail", sendPasswordResetEmail);
 
 // Product routes
 app.post("/product", FBAuth, postOneProduct);

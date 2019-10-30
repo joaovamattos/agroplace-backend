@@ -282,3 +282,23 @@ exports.updatePassword = (req, res) => {
         .json({ erro: "Erro ao atualizar a senha!" });
     });
 };
+
+exports.sendPasswordResetEmail = (req, res) => {
+  
+  if (req.body.email.trim() === "") {
+    return res.status(400).json({ error: "O e-mail estar em branco!" });
+  }
+
+  firebase
+    .auth()
+    .sendPasswordResetEmail(req.body.email)
+    .then(() => {
+      return res.status(200).json({ message: "E-mail de redefinição de senha enviado com sucesso!" });
+    })
+    .catch(err => {
+      console.error(err);
+      return res
+        .status(500)
+        .json({ erro: "Erro ao enviar e-mail de redefinição!" });
+    });
+}
