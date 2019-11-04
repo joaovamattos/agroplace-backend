@@ -1,6 +1,7 @@
 const { db, admin } = require('../util/admin');
 const config = require('../util/config');
 const { reduceProductDetails, validateProductData } = require('../util/validators');
+const moment = require('moment-timezone');
 
 exports.postOneProduct = (req, res) => {    
     
@@ -10,9 +11,11 @@ exports.postOneProduct = (req, res) => {
     
     const ref = db.collection('produtos').doc();
     const id = ref.id;
+    let newDate = moment(new Date().toISOString());
+    let date = newDate.tz('America/Porto_Velho').format();
     const newProduct = {
         categoria: req.body.category,
-        dataPublicacao: new Date().toISOString(),
+        dataPublicacao: date,
         descricao: req.body.description,
         idVendedor: req.user.id,
         nome: req.body.name,

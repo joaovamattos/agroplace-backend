@@ -1,4 +1,5 @@
 const { db } = require('../util/admin');
+const moment = require('moment-timezone');
 
 exports.sendMessage = (req, res) => {    
     
@@ -6,11 +7,13 @@ exports.sendMessage = (req, res) => {
        return res.status(400).json({ body: 'A mensagem não pode estar vazia!' })
     }
     
+    let newDate = moment(new Date().toISOString());
+    let date = newDate.tz('America/Porto_Velho').format();
     const newMessage = {
         idUsuario: req.user.id,
         mensagem: req.body.message,
         visualizada: false,
-        dataCriacao: new Date().toISOString()
+        dataCriacao: date 
     };
     const recipient = req.body.recipient;
     const sender = req.user.id;
