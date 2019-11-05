@@ -11,7 +11,8 @@ const {
   getAuthenticatedUser,
   markMessagesRead,
   updatePassword,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  signupGoogle
 } = require("./handlers/users");
 const {
   postOneProduct,
@@ -33,6 +34,7 @@ app.use(cors());
 // Users routes
 app.post("/signup", signup);
 app.post("/login", login);
+app.post("/signupGoogle", signupGoogle);
 app.post("/user/image", FBAuth, uploadImage);
 app.post("/user", FBAuth, addUserDetails);
 app.put("/user", FBAuth, addUserDetails);

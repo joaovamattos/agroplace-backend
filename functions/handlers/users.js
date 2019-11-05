@@ -62,6 +62,39 @@ exports.signup = (req, res) => {
     });
 };
 
+exports.signupGoogle = (req, res) => {
+  const newUser = {
+    email: req.body.email,
+    name: req.body.name,
+    urlImage: req.body.imageUrl
+  };
+
+  const userId = new Buffer(newUser.email).toString("base64");
+
+  const userCredential = {
+    nome: newUser.name,
+    email: newUser.email,
+    urlImagem: newUser.imageUrl,
+    id: userId
+  };
+
+  const userTest = db
+    .collection("usuarios")
+    .doc(userId)
+    .get();
+    
+  if (!userTest) {
+    db.doc(`/usuarios/${userId}`)
+      .set(userCredential)
+      .then(() => {
+        return res.status(201).json({
+          message: "Cadastrado com sucesso!"
+        });
+      })
+      .catch();
+  }
+};
+
 // Log user in
 exports.login = (req, res) => {
   const user = {
@@ -277,14 +310,11 @@ exports.updatePassword = (req, res) => {
     })
     .catch(err => {
       console.error(err);
-      return res
-        .status(500)
-        .json({ erro: "Erro ao atualizar a senha!" });
+      return res.status(500).json({ erro: "Erro ao atualizar a senha!" });
     });
 };
 
 exports.sendPasswordResetEmail = (req, res) => {
-  
   if (req.body.email.trim() === "") {
     return res.status(400).json({ error: "O e-mail estar em branco!" });
   }
@@ -293,7 +323,9 @@ exports.sendPasswordResetEmail = (req, res) => {
     .auth()
     .sendPasswordResetEmail(req.body.email)
     .then(() => {
-      return res.status(200).json({ message: "E-mail de redefinição de senha enviado com sucesso!" });
+      return res.status(200).json({
+        message: "E-mail de redefinição de senha enviado com sucesso!"
+      });
     })
     .catch(err => {
       console.error(err);
@@ -301,4 +333,4 @@ exports.sendPasswordResetEmail = (req, res) => {
         .status(500)
         .json({ erro: "Erro ao enviar e-mail de redefinição!" });
     });
-}
+};
