@@ -65,34 +65,41 @@ exports.signup = (req, res) => {
 exports.signupGoogle = (req, res) => {
   const newUser = {
     email: req.body.email,
-    name: req.body.name,
-    urlImage: req.body.imageUrl
+    nome: req.body.name,
+    urlImagem: req.body.imageUrl
   };
 
   const userId = new Buffer(newUser.email).toString("base64");
 
-  const userCredential = {
-    nome: newUser.name,
-    email: newUser.email,
-    urlImagem: newUser.imageUrl,
-    id: userId
-  };
-
-  const userTest = db
-    .collection("usuarios")
+  db.collection("usuarios")
     .doc(userId)
-    .get();
-    
-  if (!userTest) {
-    db.doc(`/usuarios/${userId}`)
-      .set(userCredential)
-      .then(() => {
-        return res.status(201).json({
-          message: "Cadastrado com sucesso!"
-        });
-      })
-      .catch();
-  }
+    .get()
+    .then(doc => {
+      user = doc.data();
+      if (user)
+        return res.status(200).json({ message: "Usuário existente", user });
+
+      const userCredential = {
+        id: userId,
+        googleAccount: true,
+        ...newUser
+      };
+
+      db.doc(`/usuarios/${userCredential.id}`)
+        .set(userCredential)
+        .then(() => {
+          return res.status(201).json({
+            message: "Cadastrado com sucesso!",
+            userCredential
+          });
+        })
+        .catch();
+    })
+    .catch(() => {
+      return res
+        .status(500)
+        .json({ message: "Ocorreu um erro, por favor tente novamente" });
+    });
 };
 
 // Log user in
