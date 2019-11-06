@@ -29,7 +29,7 @@ const {
   markConversationsRead
 } = require("./handlers/conversations");
 const cors = require("cors");
-app.use(cors());
+app.use(cors({ origin: true }));
 
 // Users routes
 app.post("/signup", signup);
