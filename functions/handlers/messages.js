@@ -53,7 +53,7 @@ exports.sendMessage = (req, res) => {
             mensagem: resMessage.mensagem,
             nome: req.user.name,
             urlImagem: req.user.imageUrl,
-            visualizada: true
+            visualizada: false
         })
         return resMessage;
     })
