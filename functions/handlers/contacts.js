@@ -9,7 +9,7 @@ exports.addContact = (req, res) => {
             identificadorUsuario: contact.data().id,
             email: contact.data().email,
             nome: contact.data().nome,
-            telefone: contact.data().telefone,
+            telefone:  contact.data().telefone ? contact.data().telefone : "",
             urlImagem: contact.data().urlImagem
         }
 
