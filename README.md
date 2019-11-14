@@ -1,5 +1,9 @@
 # agroplace-backend
 
+## Clonando o projeto
+
+> git clone https://github.com/joaovamattos/agroplace-backend.git
+
 ## Configurando o projeto
 Instale o Firebase-Tools globalmente em seu computador
 
