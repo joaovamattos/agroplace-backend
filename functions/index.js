@@ -31,6 +31,11 @@ const {
 const cors = require("cors");
 app.use(cors({ origin: true }));
 
+// Documentação
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument  = require('./swagger.json')
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));;
+
 // Users routes
 app.post("/signup", signup);
 app.post("/login", login);
@@ -86,9 +91,7 @@ exports.onUserImageChange = functions
       .then((contacts) => {
         contacts.forEach((doc) => {            
           if (doc.id !== change.before.data().id){
-            if (db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`)){
-              batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });
-            }
+            batch.set(db.doc(`/contatos/${doc.id}/pessoas/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { mergeFields: ['urlImagem'] });
           }
         })       
         return db.collection('conversas').get()
@@ -96,9 +99,7 @@ exports.onUserImageChange = functions
       .then((conversations) => {
         conversations.forEach((doc) => {  
           if(doc.id !== change.before.data().id){
-            if(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`)) {   
-              batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { merge: true });            
-            }
+            batch.set(db.doc(`/conversas/${doc.id}/contatos/${change.before.data().id}`), { urlImagem: change.after.data().urlImagem }, { mergeFields: ['urlImagem'] });            
           }
         })  
         return batch.commit();
