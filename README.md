@@ -6,7 +6,7 @@
 
 ## Sobre o projeto
 
-O Agroplace é um projeto criado para sanar uma necessidade do cone sul do estado de Rondônia - Brasil. Surgiu como um projeto do CNPq em parceria entre o IFRO - Instituto Federal de Educação, Ciência e Tecnologia de Rôndonia campus Vilhena e campus Colorado do Oeste. Além de produto do projeto é meu produto no trabalho de conclusão no CST Análise e Desenvolvimento de Sistemas ofertado pelo IFRO campus Vilhena.
+O Agroplace é um projeto criado para sanar uma necessidade do cone sul do estado de Rondônia - Brasil. Surgiu como um projeto do CNPq em parceria entre o IFRO - Instituto Federal de Educação, Ciência e Tecnologia de Rondônia campus Vilhena e campus Colorado do Oeste. Além de produto do projeto é meu produto no trabalho de conclusão no CST Análise e Desenvolvimento de Sistemas ofertado pelo IFRO campus Vilhena.
 
 ### O que é?
 
